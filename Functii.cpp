@@ -1,9 +1,9 @@
 #include "Functii.h"
 
 std::vector<MatriceRezultat> rezultate;
+std::vector<Eroare> erori;
 
 // #define GET_VARIABLE_NAME(Variable) (#Variable)
-// test
 
 void NewWindow::WindowCode() {
 
@@ -79,10 +79,10 @@ void Operatii::Adunare() {
 	Matrix A = *thisMatrix, B = *otherMatrix;
 
 	using namespace ImGui;
-
 	if (Button("Aduna cu ")) { // de completat " "
 		if (A.size() != B.size() || A[0].size() != B[0].size()) {
-			// popup
+			// aici tb reparat
+			erori.push_back(Eroare{ "Dimensiunile matricilor trebuie sa fie identice" });
 			return;
 		}
 
@@ -161,6 +161,27 @@ void  MatriceRezultat::CreateWindow() {
 		}
 		PopID();
 	}
+
+	ImGui::End();
+}
+
+     Eroare::Eroare(const char* _message) {
+		 // aici da ditamai eroarea
+		 char* temp = _strdup(_message);
+		 std::cout << message << '\n';
+	strcpy_s(message, strlen(_message), temp);
+}
+void Eroare::CreateWindow() {
+	// aici nu cred ca e bn deloc
+	ImGui::Begin("Error", &running, ImGuiWindowFlags_AlwaysAutoResize);
+
+	ImGui::BeginChild("test", ImVec2(100, 100));
+	if (ImGui::BeginPopupContextWindow())
+	{
+		ImGui::Text(message);
+		ImGui::EndPopup();
+	}
+	ImGui::EndChild();
 
 	ImGui::End();
 }

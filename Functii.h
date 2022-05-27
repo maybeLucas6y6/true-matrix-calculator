@@ -38,6 +38,7 @@ public:
 	char* GenerateID();
 	void CreateWindow();
 };
+extern std::vector<MatriceRezultat> rezultate;
 
 class Operatii : public NewWindow {
 private:
@@ -52,4 +53,12 @@ public:
 	void WindowCode() override;
 };
 
-extern std::vector<MatriceRezultat> rezultate;
+class Eroare {
+private:
+	char* message;
+public:
+	bool running = true;
+	Eroare(const char* _message);
+	void CreateWindow();
+};
+extern std::vector<Eroare> erori;

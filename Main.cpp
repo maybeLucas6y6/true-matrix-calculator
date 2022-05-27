@@ -55,6 +55,15 @@ int main()
 				rezultate[i].CreateWindow();
 			}
 		}
+		for (int i = 0; i < erori.size(); i++) {
+			if (!erori[i].running) {
+				std::swap(erori[i], erori[rezultate.size() - 1]);
+				erori.pop_back();
+			}
+			else {
+				erori[i].CreateWindow();
+			}
+		}
 
 		// --------------------------------------
 
