@@ -1,7 +1,5 @@
-#include "Functii.h"
-
-std::vector<MatriceRezultat> rezultate;
-std::vector<Eroare> erori;
+#include "Functii.h" // can be left out??
+#include "Globals.h"
 
 // #define GET_VARIABLE_NAME(Variable) (#Variable)
 
@@ -81,8 +79,7 @@ void Operatii::Adunare() {
 	using namespace ImGui;
 	if (Button("Aduna cu ")) { // de completat " "
 		if (A.size() != B.size() || A[0].size() != B[0].size()) {
-			// aici tb reparat
-			erori.push_back(Eroare{ "Dimensiunile matricilor trebuie sa fie identice" });
+			eroare.UpdateMessage("Dimensiunile matricilor trebuie sa fie identice");
 			return;
 		}
 
@@ -104,7 +101,7 @@ void Operatii::Scadere() {
 
 	if (Button("Scade ")) { // de completat " "
 		if (A.size() != B.size() || A[0].size() != B[0].size()) {
-			// popup
+			eroare.UpdateMessage("Dimensiunile matricilor trebuie sa fie identice");
 			return;
 		}
 
@@ -165,23 +162,26 @@ void  MatriceRezultat::CreateWindow() {
 	ImGui::End();
 }
 
-     Eroare::Eroare(const char* _message) {
-		 // aici da ditamai eroarea
-		 char* temp = _strdup(_message);
-		 std::cout << message << '\n';
-	strcpy_s(message, strlen(_message), temp);
+void Eroare::UpdateMessage(std::string _message) {
+	message = _message;
+	running = true;
 }
 void Eroare::CreateWindow() {
-	// aici nu cred ca e bn deloc
-	ImGui::Begin("Error", &running, ImGuiWindowFlags_AlwaysAutoResize);
+	using namespace ImGui;
+	if (!running) {
+		return;
+	}
+	else {
+		OpenPopup("Eroare", ImGuiPopupFlags_None);
+	}
 
-	ImGui::BeginChild("test", ImVec2(100, 100));
-	if (ImGui::BeginPopupContextWindow())
-	{
-		ImGui::Text(message);
+	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f),
+		ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+	if (ImGui::BeginPopupModal("Eroare", &running, 
+		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove)) {
+
+		const char* tmp = message.c_str();
+		Text(tmp);
 		ImGui::EndPopup();
 	}
-	ImGui::EndChild();
-
-	ImGui::End();
 }

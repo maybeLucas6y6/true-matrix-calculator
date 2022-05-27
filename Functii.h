@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef FUNCTII
+#define FUNCTII
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -38,7 +41,6 @@ public:
 	char* GenerateID();
 	void CreateWindow();
 };
-extern std::vector<MatriceRezultat> rezultate;
 
 class Operatii : public NewWindow {
 private:
@@ -55,10 +57,11 @@ public:
 
 class Eroare {
 private:
-	char* message;
+	std::string message;
 public:
-	bool running = true;
-	Eroare(const char* _message);
+	void UpdateMessage(std::string _message);
+	bool running = false;
 	void CreateWindow();
 };
-extern std::vector<Eroare> erori;
+
+#endif

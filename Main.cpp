@@ -1,4 +1,5 @@
-#include "Functii.h"
+#include "Functii.h"  // can be left out??
+#include "Globals.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -21,13 +22,13 @@ int main()
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO(); 
+	(void)io;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	Matrice A, B;
-	Operatii _A(&A.values, &B.values), _B(&B.values, &A.values);
+	//eroare.UpdateMessage("Test foarte foarte foarte lung");
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -55,15 +56,8 @@ int main()
 				rezultate[i].CreateWindow();
 			}
 		}
-		for (int i = 0; i < erori.size(); i++) {
-			if (!erori[i].running) {
-				std::swap(erori[i], erori[rezultate.size() - 1]);
-				erori.pop_back();
-			}
-			else {
-				erori[i].CreateWindow();
-			}
-		}
+
+		eroare.CreateWindow();
 
 		// --------------------------------------
 
