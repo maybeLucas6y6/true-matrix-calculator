@@ -10,45 +10,43 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm>
 
 typedef std::vector<std::vector<float>> Matrix;
 
 class NewWindow {
 protected:
-	char* title; // to be fixed
 	virtual void WindowCode();
 public:
-	//NewWindow(const char* _title); // same as above
 	void CreateWindow(const char* _title);
 };
 
 class Matrice : public NewWindow {
 public:
 	Matrix values;
-	Matrice();
+	std::string nume;
+	Matrice(std::string _nume);
 	void WindowCode() override;
 };
 
 class MatriceRezultat {
 private:
-	char* title;
+	std::string title;
 public:
 	static int contor;
 	bool running = true;
 	Matrix matrix;
 	MatriceRezultat(Matrix X);
-	char* GenerateID();
 	void CreateWindow();
 };
 
 class Operatii : public NewWindow {
 private:
 	float constanta = 1;
+	std::vector<std::string> buttonTexts;
 public:
 	Matrix* thisMatrix;
 	Matrix* otherMatrix;
-	Operatii(Matrix* X, Matrix* Y);
+	Operatii(Matrice* X, Matrice* Y);
 	void InmultireConstanta();
 	void Adunare();
 	void Scadere();
@@ -59,8 +57,8 @@ class Eroare {
 private:
 	std::string message;
 public:
-	void UpdateMessage(std::string _message);
 	bool running = false;
+	void UpdateMessage(std::string _message);
 	void CreateWindow();
 };
 

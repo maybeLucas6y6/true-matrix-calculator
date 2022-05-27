@@ -28,11 +28,10 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	//eroare.UpdateMessage("Test foarte foarte foarte lung");
-	
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
+
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -43,13 +42,19 @@ int main()
 		// --------------------------------------
 
 		A.CreateWindow("Matrice A");
-		B.CreateWindow("Matrice B");
 		_A.CreateWindow("Operatii A");
+		B.CreateWindow("Matrice B");
 		_B.CreateWindow("Operatii B");
+
+		if (rezultate.empty()) {
+			MatriceRezultat::contor = 0;
+		}
 		for (int i = 0; i < rezultate.size(); i++) {
 			if (!rezultate[i].running) {
 				std::swap(rezultate[i], rezultate[rezultate.size() - 1]);
-				rezultate[i].contor--;
+				if (i == rezultate.size() - 1) {
+					MatriceRezultat::contor--;
+				}
 				rezultate.pop_back();
 			}
 			else {

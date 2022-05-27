@@ -1,21 +1,21 @@
 #include "Functii.h" // can be left out??
 #include "Globals.h"
 
-// #define GET_VARIABLE_NAME(Variable) (#Variable)
-
 void NewWindow::WindowCode() {
 
 }
 void NewWindow::CreateWindow(const char* _title) {
 	ImGui::Begin(_title, NULL, ImGuiWindowFlags_AlwaysAutoResize);
+	// eventual de adaugat parametrii
 
 	WindowCode();
 
 	ImGui::End();
 }
 
-     Matrice::Matrice() {
+     Matrice::Matrice(std::string _nume) {
 	values.resize(1, std::vector<float>(1, 0.0f));
+	nume = _nume;
 }
 void Matrice::WindowCode() {
 	using namespace ImGui;
@@ -51,9 +51,12 @@ void Matrice::WindowCode() {
 	}
 }
 
-     Operatii::Operatii(Matrix* X, Matrix* Y) {
-	thisMatrix = X;
-	otherMatrix = Y;
+     Operatii::Operatii(Matrice* X, Matrice* Y) {
+	thisMatrix = &(X->values);
+	otherMatrix = &(Y->values);
+	buttonTexts.push_back(std::string("x " + X->nume));
+	buttonTexts.push_back(std::string(X->nume + " + " + Y->nume));
+	buttonTexts.push_back(std::string(X->nume + " - " + Y->nume));
 }
 void Operatii::InmultireConstanta() {
 	Matrix matrix = *thisMatrix;
@@ -63,21 +66,20 @@ void Operatii::InmultireConstanta() {
 	PushItemWidth(80);
 	InputFloat(" ", &constanta, 0, 0, "%.2f", ImGuiInputTextFlags_AutoSelectAll);
 	SameLine();
-	if (Button("Inmulteste cu constanta")) {
+	if (Button(buttonTexts[0].c_str())) {
 		for (int i = 0; i < matrix.size(); i++) {
 			for (int j = 0; j < matrix[0].size(); j++) {
 				matrix[i][j] *= constanta;
 			}
 		}
-		MatriceRezultat tmp(matrix);
-		rezultate.push_back(tmp);
+		rezultate.push_back(MatriceRezultat(matrix));
 	}
 }
 void Operatii::Adunare() {
 	Matrix A = *thisMatrix, B = *otherMatrix;
 
 	using namespace ImGui;
-	if (Button("Aduna cu ")) { // de completat " "
+	if (Button(buttonTexts[1].c_str())) {
 		if (A.size() != B.size() || A[0].size() != B[0].size()) {
 			eroare.UpdateMessage("Dimensiunile matricilor trebuie sa fie identice");
 			return;
@@ -90,8 +92,7 @@ void Operatii::Adunare() {
 				C[i][j] = A[i][j] + B[i][j];
 			}
 		}
-		MatriceRezultat tmp(C);
-		rezultate.push_back(tmp);
+		rezultate.push_back(MatriceRezultat(C));
 	}
 }
 void Operatii::Scadere() {
@@ -99,7 +100,7 @@ void Operatii::Scadere() {
 
 	using namespace ImGui;
 
-	if (Button("Scade ")) { // de completat " "
+	if (Button(buttonTexts[2].c_str())) {
 		if (A.size() != B.size() || A[0].size() != B[0].size()) {
 			eroare.UpdateMessage("Dimensiunile matricilor trebuie sa fie identice");
 			return;
@@ -112,8 +113,7 @@ void Operatii::Scadere() {
 				C[i][j] = A[i][j] - B[i][j];
 			}
 		}
-		MatriceRezultat tmp(C);
-		rezultate.push_back(tmp);
+		rezultate.push_back(MatriceRezultat(C));
 	}
 }
 void Operatii::WindowCode() {
@@ -124,27 +124,16 @@ void Operatii::WindowCode() {
 	Scadere();
 }
 
-int   MatriceRezultat::contor = 0;
-      MatriceRezultat::MatriceRezultat(Matrix X) {
+int         MatriceRezultat::contor = 0;
+            MatriceRezultat::MatriceRezultat(Matrix X) {
 	matrix = X;
 	contor++;
-	char* newTitle;
-	char* id = GenerateID();
-	newTitle = new char[50];
-	strcpy_s(newTitle, 50, "Rezultat ");
-	strcat_s(newTitle, 50, id);
-	title = newTitle;
+	title = "Rezultat " + std::to_string(contor);
 }
-char* MatriceRezultat::GenerateID() {
-	std::string tmp1 = std::to_string(contor);
-	const char* tmp2 = tmp1.c_str();
-	char* newID = _strdup(tmp2);
-	return newID;
-}
-void  MatriceRezultat::CreateWindow() {
+void        MatriceRezultat::CreateWindow() {
 	using namespace ImGui;
 
-	ImGui::Begin(title, &running, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin(title.c_str(), &running, ImGuiWindowFlags_AlwaysAutoResize);
 
 	int inputWidth = 40;
 	PushItemWidth(inputWidth);
@@ -172,7 +161,7 @@ void Eroare::CreateWindow() {
 		return;
 	}
 	else {
-		OpenPopup("Eroare", ImGuiPopupFlags_None);
+		OpenPopup("Eroare");
 	}
 
 	SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f, ImGui::GetIO().DisplaySize.y * 0.5f),
@@ -180,8 +169,7 @@ void Eroare::CreateWindow() {
 	if (ImGui::BeginPopupModal("Eroare", &running, 
 		ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove)) {
 
-		const char* tmp = message.c_str();
-		Text(tmp);
+		Text((const char*)message.c_str());
 		ImGui::EndPopup();
 	}
 }
