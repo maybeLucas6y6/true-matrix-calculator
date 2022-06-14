@@ -397,3 +397,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 imgui.ini
+opengl_example_1.vcxproj

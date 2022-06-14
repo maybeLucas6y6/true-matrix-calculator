@@ -1,4 +1,3 @@
-#include "Functii.h"  // can be left out??
 #include "Globals.h"
 
 #include <glad/glad.h>
@@ -41,10 +40,10 @@ int main()
 
 		// --------------------------------------
 
-		A.CreateWindow("Matrice A");
-		_A.CreateWindow("Operatii A");
-		B.CreateWindow("Matrice B");
-		_B.CreateWindow("Operatii B");
+		A.Run();
+		_A.Run();
+		B.Run();
+		_B.Run();
 
 		if (rezultate.empty()) {
 			MatriceRezultat::contor = 0;

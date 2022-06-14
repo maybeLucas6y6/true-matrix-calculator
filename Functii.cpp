@@ -1,11 +1,13 @@
-#include "Functii.h" // can be left out??
 #include "Globals.h"
 
 void NewWindow::WindowCode() {
 
 }
-void NewWindow::CreateWindow(const char* _title) {
-	ImGui::Begin(_title, NULL, ImGuiWindowFlags_AlwaysAutoResize);
+     NewWindow::NewWindow(const char* _windowTitle) {
+		 windowTitle = _windowTitle;
+	 }
+void NewWindow::Run() {
+	ImGui::Begin(windowTitle, NULL, ImGuiWindowFlags_AlwaysAutoResize);
 	// eventual de adaugat parametrii
 
 	WindowCode();
@@ -13,7 +15,9 @@ void NewWindow::CreateWindow(const char* _title) {
 	ImGui::End();
 }
 
-     Matrice::Matrice(std::string _nume) {
+     Matrice::Matrice(std::string _nume, const char* _windowTitle)
+		 : NewWindow(_windowTitle)
+	 {
 	values.resize(1, std::vector<float>(1, 0.0f));
 	nume = _nume;
 }
@@ -51,7 +55,8 @@ void Matrice::WindowCode() {
 	}
 }
 
-     Operatii::Operatii(Matrice* X, Matrice* Y) {
+     Operatii::Operatii(Matrice* X, Matrice* Y, const char* _windowTitle)
+		 : NewWindow(_windowTitle) {
 	thisMatrix = &(X->values);
 	otherMatrix = &(Y->values);
 	buttonTexts.push_back(std::string("x " + X->nume));
@@ -124,13 +129,13 @@ void Operatii::WindowCode() {
 	Scadere();
 }
 
-int         MatriceRezultat::contor = 0;
-            MatriceRezultat::MatriceRezultat(Matrix X) {
+int  MatriceRezultat::contor = 0;
+     MatriceRezultat::MatriceRezultat(Matrix X) {
 	matrix = X;
 	contor++;
 	title = "Rezultat " + std::to_string(contor);
 }
-void        MatriceRezultat::CreateWindow() {
+void MatriceRezultat::CreateWindow() {
 	using namespace ImGui;
 
 	ImGui::Begin(title.c_str(), &running, ImGuiWindowFlags_AlwaysAutoResize);

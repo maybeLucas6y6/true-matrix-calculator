@@ -9,22 +9,25 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 #include <string>
 
 typedef std::vector<std::vector<float>> Matrix;
 
 class NewWindow {
 protected:
+	const char* windowTitle;
 	virtual void WindowCode();
 public:
-	void CreateWindow(const char* _title);
+	NewWindow(const char* _windowTitle);
+	void Run();
 };
 
 class Matrice : public NewWindow {
 public:
 	Matrix values;
 	std::string nume;
-	Matrice(std::string _nume);
+	Matrice(std::string _nume, const char* _windowTitle);
 	void WindowCode() override;
 };
 
@@ -46,7 +49,7 @@ private:
 public:
 	Matrix* thisMatrix;
 	Matrix* otherMatrix;
-	Operatii(Matrice* X, Matrice* Y);
+	Operatii(Matrice* X, Matrice* Y, const char* _windowTitle);
 	void InmultireConstanta();
 	void Adunare();
 	void Scadere();
